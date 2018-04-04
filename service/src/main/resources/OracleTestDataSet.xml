@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx" xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/tx
+       http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+    <!--<context:property-placeholder location="classpath:TravelService.properties"/>&lt;!&ndash; 加载配置文件 &ndash;&gt;-->
+
+    <!-- 数据源 org.apache.commons.dbcp.BasicDataSource com.alibaba.druid.pool.DruidDataSource -->
+    <bean id="oracleTestDataSource" class="com.alibaba.druid.pool.DruidDataSource">
+        <property name="driverClassName" value="${travelService.oracle.test.driver}"/>
+        <property name="url" value="${travelService.oracle.test.url}"/>
+        <property name="username" value="${travelService.oracle.test.username}"/>
+        <property name="password" value="${travelService.oracle.test.password}"/>
+
+        <!-- 初始化连接大小 -->
+        <property name="initialSize" value="${travelService.oracle.InitialPoolSize}"/>
+        <!-- 连接池最大使用连接数量 -->
+        <property name="maxActive" value="${travelService.oracle.MaxPoolSize}"/>
+        <!-- 连接池最小空闲 -->
+        <property name="minIdle" value="${travelService.oracle.MinPoolSize}"/>
+        <!-- 获取连接最大等待时间 -->
+        <property name="maxWait" value="${travelService.oracle.checkoutTimeout}"/>
+
+        <property name="validationQuery" value="${travelService.oracle.preferredTestQuery}"/>
+        <property name="testOnBorrow" value="false"/>
+        <property name="testOnReturn" value="false"/>
+        <property name="testWhileIdle" value="true"/>
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="${travelService.oracle.idleConnectionTestPeriod}"/>
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="25200000"/>
+
+        <!-- 打开removeAbandoned功能 -->
+        <property name="removeAbandoned" value="true"/>
+        <!-- 1800秒，也就是30分钟 -->
+        <property name="removeAbandonedTimeout" value="${travelService.oracle.MaxIdleTime}"/>
+        <!-- 关闭abanded连接时输出错误日志 -->
+        <property name="logAbandoned" value="true"/>
+
+        <!-- 监控数据库 -->
+        <!-- <property name="filters" value="stat" /> -->
+        <property name="filters" value="mergeStat"/>
+    </bean>
+
+    <bean id="oracleTestTransactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="oracleTestDataSource"/>
+    </bean>
+
+    <!-- 声明式事务 -->
+    <tx:annotation-driven transaction-manager="oracleTestTransactionManager"
+                          proxy-target-class="true"/>
+    <!-- oracle data access -->
+    <bean id="oracleTestDataAccessor" class="com.crscd.framework.dao.impl.DefaultDataAccessor">
+        <constructor-arg name="dataSource" ref="oracleTestDataSource"/>
+    </bean>
+
+    <bean id="oracleTestDatabaseHelper" class="com.crscd.framework.dao.DatabaseHelper">
+        <constructor-arg name="dataSource" ref="oracleTestDataSource"/>
+        <constructor-arg name="dataAccessor" ref="oracleTestDataAccessor"/>
+    </bean>
+
+    <bean id="oracleTestDataSet" class="com.crscd.framework.orm.DataSet">
+        <constructor-arg name="dbhelper" ref="oracleTestDatabaseHelper"/>
+        <constructor-arg name="dbtype" value="oracle"/>
+    </bean>
+</beans>

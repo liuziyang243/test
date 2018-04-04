@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!-- SimpleJaxWsServiceExporter会自动搜索包中含有javax.jws.WebService注解的类,并将之发布为WebService -->
+    <!-- 这种方式可以直接向SIB中注入对象,因为这个WebService已被Spring所管理 -->
+    <!-- value用于指明发布地址,不强制要求与Web应用地址相同,访问时的地址是'value'加上@WebService(serviceName='') -->
+    <bean class="org.springframework.remoting.jaxws.SimpleJaxWsServiceExporter">
+        <property name="baseAddress" value="${travelService.baseServiceURL}"/>
+    </bean>
+
+    <bean class="com.crscd.passengerservice.aop.SoapHeaderHandler"/>
+
+</beans>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <bean name="screenGuideRuleDAO" class="com.crscd.passengerservice.display.guiderule.dao.ScreenGuideRuleDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="screenGuideRuleInterfaceImpl"
+          class="com.crscd.passengerservice.display.guiderule.serviceinterface.ScreenGuideRuleInterfaceImpl">
+        <property name="screenGuideRuleDAO" ref="screenGuideRuleDAO"/>
+    </bean>
+
+    <bean name="planOnOffTimeImpl" class="com.crscd.passengerservice.display.guiderule.business.PlanOnOffTimeImpl">
+        <property name="ruleDAO" ref="screenGuideRuleDAO"/>
+    </bean>
+
+    <bean name="makeGuidePlanOnScreen" class="com.crscd.passengerservice.display.business.MakeGuidePlanOnScreen">
+        <property name="configManager" ref="configManager"/>
+        <property name="guideStationPlanManager" ref="guidePlanManager"/>
+    </bean>
+
+    <bean name="makeGuidePlanOnScreenManager"
+          class="com.crscd.passengerservice.display.business.MakeGuidePlanOnScreenManager">
+        <property name="configManager" ref="configManager"/>
+    </bean>
+
+    <bean name="guideService" class="com.crscd.passengerservice.soapinterface.implement.GuideServiceInterfaceImpl">
+        <property name="guideServiceInterface" ref="screenGuideRuleInterfaceImpl"/>
+        <property name="deviceManagerInterface" ref="deviceManagerInterfaceImpl"/>
+        <property name="formatManagerInterface" ref="formatManagerInterfaceImpl"/>
+        <property name="frameManagerInterface" ref="frameMangerInterfaceImpl"/>
+        <property name="materialManagerInterface" ref="materialManagerImplement"/>
+        <property name="playListManagerInterface" ref="playListManagerImplement"/>
+        <property name="formatSendInterface" ref="formatSendInterfaceImpl"/>
+    </bean>
+</beans>

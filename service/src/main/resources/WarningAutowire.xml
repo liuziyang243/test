@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean name="deviceWarningDAO" class="com.crscd.passengerservice.warning.dao.DeviceWarningDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="screenMonitorImpl" class="com.crscd.passengerservice.warning.business.ScreenMonitorImpl">
+        <property name="configManager" ref="configManager"/>
+        <property name="warningDAO" ref="deviceWarningDAO"/>
+    </bean>
+
+    <bean name="screenMonitorFramework" class="com.crscd.passengerservice.warning.business.ObjectMonitorFramework">
+        <constructor-arg name="refreshTime" value="1"/>
+        <constructor-arg name="SchedulerName" value="screenMonitor"/>
+        <constructor-arg name="stateInterface" ref="screenMonitorImpl"/>
+    </bean>
+
+    <bean name="deviceMonitor" class="com.crscd.passengerservice.warning.business.DeviceMonitorManager">
+        <constructor-arg name="monitorFrameworkList">
+            <list>
+                <ref bean="screenMonitorFramework"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean name="warningServiceInterface"
+          class="com.crscd.passengerservice.warning.serviceinterface.WarningServiceInterfaceImpl">
+        <property name="deviceWarningDAO" ref="deviceWarningDAO"/>
+    </bean>
+
+    <bean name="screenCtrlServerMonitorImpl"
+          class="com.crscd.passengerservice.warning.business.ScreenCtrlServerMonitorImpl">
+        <property name="dao" ref="interfaceMachineWarningDAO"/>
+    </bean>
+
+    <bean name="interfaceMachineWarningDAO" class="com.crscd.passengerservice.warning.dao.InterfaceMachineWarningDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+</beans>

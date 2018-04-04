@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ehcache updateCheck="false" monitoring="autodetect" dynamicConfig="true">
+
+    <cache name="configCache"
+           eternal="true"
+           maxElementsInMemory="100"
+           overflowToDisk="false">
+    </cache>
+
+    <cache name="shiroCache"
+           eternal="false"
+           maxElementsInMemory="30"
+           overflowToDisk="false">
+    </cache>
+</ehcache>

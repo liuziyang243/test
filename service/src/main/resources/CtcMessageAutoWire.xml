@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean name="okHttpClient" class="com.crscd.framework.restful.client.OkhttpBasedRestHttpClient">
+    </bean>
+
+    <bean name="ctcMsgManager" class="com.crscd.passengerservice.ctc.business.CtcMsgManager">
+        <property name="client" ref="okHttpClient"/>
+        <property name="config" ref="configManager"/>
+        <property name="bpManager" ref="basicPlanManager"/>
+        <property name="dspManager" ref="dispathPlanManager"/>
+        <property name="ctcNoticeService" ref="ctcNoticeImpl"/>
+        <constructor-arg name="ctcMessageDAO" ref="ctcMessageDAO"/>
+    </bean>
+
+    <bean name="ctcMessageDAO" class="com.crscd.passengerservice.ctc.dao.CtcMessageDAO">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+
+    <bean name="ctcMsgRefreshManager" class="com.crscd.passengerservice.ctc.business.CtcMsgRefreshManager">
+    </bean>
+
+
+</beans>

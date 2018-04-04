@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--<context:property-placeholder location="classpath:TravelService.properties"/>&lt;!&ndash; 加载配置文件 &ndash;&gt;-->
+
+    <bean id="basicPlanDAO" class="com.crscd.passengerservice.plan.dao.BasicPlanDAO">
+        <constructor-arg name="dataSet" ref="${travelService.dataBaseInUse}"/>
+        <constructor-arg name="manager" ref="configManager"/>
+    </bean>
+
+    <bean id="dispatchPlanDAO" class="com.crscd.passengerservice.plan.dao.DispatchPlanDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+        <constructor-arg name="manager" ref="configManager"/>
+    </bean>
+
+    <bean id="passengerPlanDAO" class="com.crscd.passengerservice.plan.dao.PassengerPlanDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+        <constructor-arg name="manager" ref="configManager"/>
+    </bean>
+
+    <bean id="guidePlanDAO" class="com.crscd.passengerservice.plan.dao.GuidePlanDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+        <constructor-arg name="manager" ref="configManager"/>
+    </bean>
+
+    <bean id="broadcastPlanDAO" class="com.crscd.passengerservice.plan.dao.BroadcastPlanDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+        <constructor-arg name="manager" ref="configManager"/>
+    </bean>
+
+    <bean id="organizeTemplateDAO" class="com.crscd.passengerservice.plan.dao.OrganizeTemplateDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean id="dispatchPlanDataPool" class="com.crscd.passengerservice.plan.pool.DispatchPlanDataPool">
+        <constructor-arg name="durationInDays" value="7"/>
+        <constructor-arg name="dao" ref="dispatchPlanDAO"/>
+    </bean>
+
+    <bean id="passengerPlanDataPool" class="com.crscd.passengerservice.plan.pool.PassengerPlanDataPool">
+        <constructor-arg name="durationInDays" value="7"/>
+        <constructor-arg name="dao" ref="passengerPlanDAO"/>
+    </bean>
+
+    <bean id="guidePlanDataPool" class="com.crscd.passengerservice.plan.pool.GuidePlanDataPool">
+        <constructor-arg name="durationInDays" value="7"/>
+        <constructor-arg name="dao" ref="guidePlanDAO"/>
+    </bean>
+
+    <bean id="broadcastPlanDataPool" class="com.crscd.passengerservice.plan.pool.BroadcastPlanDataPool">
+        <constructor-arg name="durationInDays" value="7"/>
+        <constructor-arg name="dao" ref="broadcastPlanDAO"/>
+    </bean>
+
+    <bean name="planGenerateInMem" class="com.crscd.passengerservice.plan.business.generation.PlanGenerateInMem"
+          scope="prototype">
+        <property name="basicPlanDAO" ref="basicPlanDAO"/>
+        <property name="broadcastPlanDAO" ref="broadcastPlanDAO"/>
+        <property name="broadcastTemplateManager" ref="broadcastTemplateManager"/>
+        <property name="dispatchPlanDAO" ref="dispatchPlanDAO"/>
+        <property name="guidePlanDAO" ref="guidePlanDAO"/>
+        <property name="manager" ref="configManager"/>
+        <property name="organizeTemplateDAO" ref="organizeTemplateDAO"/>
+        <property name="passengerPlanDAO" ref="passengerPlanDAO"/>
+    </bean>
+
+    <bean name="planGenerateInDB" class="com.crscd.passengerservice.plan.business.generation.PlanGenerateInDB"
+          scope="prototype">
+        <property name="basicPlanDAO" ref="basicPlanDAO"/>
+        <property name="broadcastTemplateManager" ref="broadcastTemplateManager"/>
+        <property name="helper" ref="mysqlDatabaseHelper"/>
+        <property name="broadcastManager" ref="broadcastPlanManager"/>
+        <property name="dispatchManager" ref="dispathPlanManager"/>
+        <property name="guideManager" ref="guidePlanManager"/>
+        <property name="passengerManager" ref="passengerPlanManager"/>
+        <property name="manager" ref="configManager"/>
+        <property name="broadcastPlanDAO" ref="broadcastPlanDAO"/>
+        <property name="dispatchPlanDAO" ref="dispatchPlanDAO"/>
+        <property name="guidePlanDAO" ref="guidePlanDAO"/>
+        <property name="passengerPlanDAO" ref="passengerPlanDAO"/>
+        <property name="schedulerManager" ref="broadcastSchedulerManager"/>
+    </bean>
+
+    <bean name="planGenerator" class="com.crscd.passengerservice.plan.business.generation.PlanGenerator"
+          scope="prototype">
+        <constructor-arg name="planGenerateInDB" ref="planGenerateInDB"/>
+        <constructor-arg name="planGenerateInMem" ref="planGenerateInMem"/>
+    </bean>
+
+    <bean name="planGeneratorParallel" class="com.crscd.passengerservice.plan.business.generation.PlanGeneratorParallel"
+          scope="prototype">
+        <constructor-arg name="planGenerateInMem" ref="planGenerateInMem"/>
+    </bean>
+
+    <bean name="planDeleter" class="com.crscd.passengerservice.plan.business.deletion.PlanDeleter" scope="prototype">
+        <constructor-arg name="dataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="broadcastManager" ref="broadcastPlanManager"/>
+        <property name="dispatchManager" ref="dispathPlanManager"/>
+        <property name="guideManager" ref="guidePlanManager"/>
+        <property name="passengerManager" ref="passengerPlanManager"/>
+        <property name="schedulerManager" ref="broadcastSchedulerManager"/>
+    </bean>
+
+    <bean name="planDeleterParallel" class="com.crscd.passengerservice.plan.business.deletion.PlanDeleterParallel"
+          scope="prototype"/>
+
+    <bean name="planDeleterStream" class="com.crscd.passengerservice.plan.business.deletion.PlanDeleterStream"
+          scope="prototype">
+        <constructor-arg name="dataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="broadcastManager" ref="broadcastPlanManager"/>
+        <property name="dispatchManager" ref="dispathPlanManager"/>
+        <property name="guideManager" ref="guidePlanManager"/>
+        <property name="passengerManager" ref="passengerPlanManager"/>
+        <property name="schedulerManager" ref="broadcastSchedulerManager"/>
+    </bean>
+
+    <bean id="basicPlanManager" class="com.crscd.passengerservice.plan.business.BasicPlanManager">
+        <constructor-arg name="dao" ref="basicPlanDAO"/>
+    </bean>
+
+    <bean id="dispathPlanManager" class="com.crscd.passengerservice.plan.business.DispatchStationPlanManager">
+        <property name="planDataPool" ref="dispatchPlanDataPool"/>
+    </bean>
+
+    <bean id="passengerPlanManager" class="com.crscd.passengerservice.plan.business.PassengerStationPlanManager">
+        <property name="planDataPool" ref="passengerPlanDataPool"/>
+    </bean>
+
+    <bean id="guidePlanManager" class="com.crscd.passengerservice.plan.business.GuideStationPlanManager">
+        <property name="planDataPool" ref="guidePlanDataPool"/>
+    </bean>
+
+    <bean id="broadcastPlanManager" class="com.crscd.passengerservice.plan.business.BroadcastStationPlanManager">
+        <property name="planDataPool" ref="broadcastPlanDataPool"/>
+        <property name="schedulerManager" ref="broadcastSchedulerManager"/>
+        <property name="alterBroadcastPlanGenerator" ref="alterBroadcastPlanGenerator"/>
+    </bean>
+
+    <bean id="planGenAndDelManager" class="com.crscd.passengerservice.plan.business.PlanGenAndDelManager"/>
+
+    <bean id="planRefreshManager" class="com.crscd.passengerservice.plan.business.RefreshPlanDataPoolManager">
+        <constructor-arg name="schedulerName" value="dispatchPlanRefreshScheduler"/>
+        <constructor-arg name="refreshTimeCorn" value="0 0 3 * * ?"/>
+    </bean>
+
+    <bean id="basicPlanServiceImpl"
+          class="com.crscd.passengerservice.plan.serviceinterface.implement.BasicPlanInterfaceImpl">
+        <constructor-arg name="manager" ref="basicPlanManager"/>
+        <constructor-arg name="cfgManager" ref="configManager"/>
+        <property name="dao" ref="organizeTemplateDAO"/>
+    </bean>
+
+    <bean id="dispatchPlanServiceImpl"
+          class="com.crscd.passengerservice.plan.serviceinterface.implement.DispatchPlanInterfaceImpl">
+        <property name="manager" ref="dispathPlanManager"/>
+    </bean>
+
+    <bean id="passengerPlanServiceImpl"
+          class="com.crscd.passengerservice.plan.serviceinterface.implement.PassengerPlanInterfaceImpl">
+        <property name="manager" ref="passengerPlanManager"/>
+    </bean>
+
+    <bean id="guidePlanServiceImpl"
+          class="com.crscd.passengerservice.plan.serviceinterface.implement.GuidePlanInterfaceImpl">
+        <property name="manager" ref="guidePlanManager"/>
+    </bean>
+
+    <bean id="broadcastPlanServiceImpl"
+          class="com.crscd.passengerservice.plan.serviceinterface.implement.BroadcastPlanInterfaceImpl">
+        <property name="manager" ref="broadcastPlanManager"/>
+        <property name="contentReplaceInterface" ref="normalContentManager"/>
+    </bean>
+
+    <bean name="broadcastStateInterfaceImpl"
+          class="com.crscd.passengerservice.plan.serviceinterface.implement.BroadcastStateInterfaceImpl">
+        <property name="manager" ref="broadcastPlanManager"/>
+        <property name="recordManager" ref="broadcastRecordManager"/>
+    </bean>
+
+    <bean id="organizeTemplateInterfaceImpl"
+          class="com.crscd.passengerservice.plan.serviceinterface.implement.OrganizeTemplateInterfaceImpl">
+        <constructor-arg name="dao" ref="organizeTemplateDAO"/>
+        <constructor-arg name="manager" ref="basicPlanManager"/>
+        <constructor-arg name="cfgManager" ref="configManager"/>
+    </bean>
+
+    <bean id="generateAndDelPlanImpl"
+          class="com.crscd.passengerservice.plan.serviceinterface.implement.GenerateAndDelPlanInterfaceImpl">
+        <constructor-arg name="dao" ref="organizeTemplateDAO"/>
+        <constructor-arg name="basicPlanManager" ref="basicPlanManager"/>
+        <constructor-arg name="manager" ref="planGenAndDelManager"/>
+    </bean>
+
+    <bean id="basicPlanCompareManager" class="com.crscd.passengerservice.plan.business.BasicPlanCompareManager">
+        <property name="ctcMessageDAO" ref="ctcMessageDAO"/>
+        <property name="basicPlanManager" ref="basicPlanManager"/>
+        <property name="configManager" ref="configManager"/>
+    </bean>
+
+    <bean id="basicMapInterfaceImpl"
+          class="com.crscd.passengerservice.plan.serviceinterface.implement.BasicMapInterfaceImpl">
+        <property name="basicPlanCompareManager" ref="basicPlanCompareManager"/>
+    </bean>
+
+    <!-- plan service -->
+    <bean id="planService" class="com.crscd.passengerservice.soapinterface.implement.PlanServiceInterfaceImpl">
+        <property name="basicPlanInterface" ref="basicPlanServiceImpl"/>
+        <property name="dispatchPlanInterface" ref="dispatchPlanServiceImpl"/>
+        <property name="passengerPlanInterface" ref="passengerPlanServiceImpl"/>
+        <property name="broadcastPlanInterface" ref="broadcastPlanServiceImpl"/>
+        <property name="guidePlanInterface" ref="guidePlanServiceImpl"/>
+        <property name="organizeTemplateInterface" ref="organizeTemplateInterfaceImpl"/>
+        <property name="noticeServiceInterface" ref="noticeServiceImpl"/>
+        <property name="generateAndDelPlanInterface" ref="generateAndDelPlanImpl"/>
+        <property name="planGenNoticeInterface" ref="planGenNoticeInterface"/>
+        <property name="basicMapInterface" ref="basicMapInterfaceImpl"/>
+    </bean>
+</beans>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="actionServiceImpl"
+          class="com.crscd.passengerservice.authority.serviceinterface.implement.ActionServiceImpl">
+        <constructor-arg name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean id="userServiceImpl" class="com.crscd.passengerservice.authority.serviceinterface.implement.UserServiceImpl">
+        <constructor-arg name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean id="roleServiceImpl" class="com.crscd.passengerservice.authority.serviceinterface.implement.RoleServiceImpl">
+        <constructor-arg name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean id="authorityBusinessImpl"
+          class="com.crscd.passengerservice.authority.serviceinterface.implement.AuthorityBusinessImpl">
+        <constructor-arg name="userService" ref="userServiceImpl"/>
+        <constructor-arg name="config" ref="configManager"/>
+        <property name="actionService" ref="actionServiceImpl"/>
+        <property name="roleService" ref="roleServiceImpl"/>
+        <property name="userStatusManager" ref="userStatusManager"/>
+    </bean>
+
+    <bean id="userStatusManager"
+          class="com.crscd.passengerservice.authority.business.UserStatusManager">
+    </bean>
+
+    <bean id="systemService" class="com.crscd.passengerservice.soapinterface.implement.SystemServiceInterfaceImpl">
+        <property name="authorityBusinessInterface" ref="authorityBusinessImpl"/>
+        <property name="systemConfigInterface" ref="configServiceImpl"/>
+        <property name="systemInfoInterface" ref="systemInfoImpl"/>
+        <property name="warningServiceInterface" ref="warningServiceInterface"/>
+        <property name="operationLogInterface" ref="operationLogInterfaceImpl"/>
+    </bean>
+</beans>

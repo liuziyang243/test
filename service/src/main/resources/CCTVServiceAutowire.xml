@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="cctvUserInfo" class="com.crscd.passengerservice.cctv.domainobject.CCTVSystemUserInfo">
+        <constructor-arg name="cmsIP" value="${travelService.cmsIP}"/>
+        <constructor-arg name="cmsPort" value="${travelService.cmsPort}"/>
+        <constructor-arg name="passWord" value="${travelService.passWord}"/>
+        <constructor-arg name="userName" value="${travelService.userName}"/>
+    </bean>
+
+    <bean name="roundRollingGroupDAO" class="com.crscd.passengerservice.cctv.dao.RoundRollingGroupDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="CCTVServiceInterfaceImpl"
+          class="com.crscd.passengerservice.cctv.serviceinterface.CCTVServiceInterfaceImpl">
+        <property name="dao" ref="roundRollingGroupDAO"/>
+        <property name="userInfo" ref="cctvUserInfo"/>
+    </bean>
+
+</beans>

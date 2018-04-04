@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean name="dataXMLGeneration" class="com.crscd.passengerservice.display.format.business.DataXMLGeneration">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="formatManager" ref="formatManager"/>
+    </bean>
+
+    <bean name="dataGetOrderByTime" class="com.crscd.passengerservice.display.format.util.DataGetOrderByTime">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="formatSendHelper" class="com.crscd.passengerservice.display.format.util.FormatSendHelper">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="formatFileManager" ref="formatFileManager"/>
+        <property name="formatSend" ref="FormatSend"/>
+    </bean>
+
+    <bean name="dTVarXMLGeneration" class="com.crscd.passengerservice.display.format.business.DTVarXMLGeneration">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="infoToBean" class="com.crscd.passengerservice.display.format.business.InfoToBean"/>
+
+    <bean name="formatFileManager" class="com.crscd.passengerservice.display.format.business.FormatFileManager">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="infoToBean" ref="infoToBean"/>
+    </bean>
+
+    <bean name="formatManager" class="com.crscd.passengerservice.display.format.business.FormatManager">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="formatFileManager" ref="formatFileManager"/>
+        <property name="frameManager" ref="frameManager"/>
+        <property name="formatXMLGeneration" ref="formatXMLGeneration"/>
+        <property name="frameFileManager" ref="frameFileManager"/>
+        <property name="configManager" ref="configManager"/>
+    </bean>
+
+    <bean name="formatXMLGeneration" class="com.crscd.passengerservice.display.format.business.FormatXMLGeneration">
+        <property name="dtVarXMLGeneration" ref="dTVarXMLGeneration"/>
+        <property name="formatFileManager" ref="formatFileManager"/>
+        <property name="formatManager" ref="formatManager"/>
+        <property name="frameFileManager" ref="frameFileManager"/>
+    </bean>
+
+    <bean name="frameFileManager" class="com.crscd.passengerservice.display.format.business.FrameFileManager">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="infoToBean" ref="infoToBean"/>
+    </bean>
+
+    <bean name="frameManager" class="com.crscd.passengerservice.display.format.business.FrameManager">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="frameFileManager" ref="frameFileManager"/>
+        <property name="frameXMLGeneration" ref="frameXMLGeneration"/>
+        <property name="configManager" ref="configManager"/>
+    </bean>
+
+    <bean name="frameXMLGeneration" class="com.crscd.passengerservice.display.format.business.FrameXMLGeneration">
+        <property name="frameFileManager" ref="frameFileManager"/>
+        <property name="dtVarXMLGeneration" ref="dTVarXMLGeneration"/>
+    </bean>
+
+    <bean name="ticketWinXmlGeneration"
+          class="com.crscd.passengerservice.display.format.business.TicketWinXmlGeneration">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="formatSendInterfaceImpl"
+          class="com.crscd.passengerservice.display.format.serviceinterface.FormatSendInterfaceImpl">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="ticketDataForDisplayGeneration" ref="ticketDataForDisplayGeneration"/>
+        <property name="ticketWinXmlGeneration" ref="ticketWinXmlGeneration"/>
+        <property name="formatSendHelper" ref="formatSendHelper"/>
+        <property name="dataGetOrderByTime" ref="dataGetOrderByTime"/>
+        <property name="dataXMLGeneration" ref="dataXMLGeneration"/>
+        <property name="formatFileManager" ref="formatFileManager"/>
+    </bean>
+
+    <bean name="ticketDataForDisplayGeneration"
+          class="com.crscd.passengerservice.ticket.bussiness.TicketDataForDisplayGeneration"/>
+
+    <bean name="FormatSendReturnManage"
+          class="com.crscd.passengerservice.display.format.business.FormatSendReturnManage">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="dataGetOrderByTime" ref="dataGetOrderByTime"/>
+        <property name="ticketDataForDisplayGeneration" ref="ticketDataForDisplayGeneration"/>
+    </bean>
+
+    <bean name="formatManagerInterfaceImpl"
+          class="com.crscd.passengerservice.display.format.serviceinterface.FormatManagerInterfaceImpl">
+        <property name="formatManger" ref="formatManager"/>
+    </bean>
+
+    <bean name="frameMangerInterfaceImpl"
+          class="com.crscd.passengerservice.display.format.serviceinterface.FrameManagerInterfaceImpl">
+        <property name="frameManager" ref="frameManager"/>
+    </bean>
+
+</beans>

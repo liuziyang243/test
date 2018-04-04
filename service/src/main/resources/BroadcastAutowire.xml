@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean name="broadcastTemplateGroupDAO"
+          class="com.crscd.passengerservice.broadcast.template.dao.BroadcastTemplateGroupDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="broadcastTemplateDAO" class="com.crscd.passengerservice.broadcast.template.dao.BroadcastTemplateDao">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="normalContentDAO"
+          class="com.crscd.passengerservice.broadcast.content.dao.NormalBroadcastContentDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="specialContentDAO" class="com.crscd.passengerservice.broadcast.content.dao.SpecialBroadcastContentDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="broadcastRecordDAO" class="com.crscd.passengerservice.broadcast.record.dao.BroadcastRecordDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="broadcastTemplateManager"
+          class="com.crscd.passengerservice.broadcast.template.business.BroadcastTemplateManager">
+        <property name="contentDAO" ref="normalContentDAO"/>
+        <property name="groupDAO" ref="broadcastTemplateGroupDAO"/>
+        <property name="templateDao" ref="broadcastTemplateDAO"/>
+        <property name="configManager" ref="configManager"/>
+    </bean>
+
+    <bean name="normalWildcardReplaceManager"
+          class="com.crscd.passengerservice.broadcast.content.business.NormalWildcardReplaceManager">
+        <property name="translator" ref="translator"/>
+    </bean>
+
+    <bean name="specialWildcardReplaceManager"
+          class="com.crscd.passengerservice.broadcast.content.business.SpecialWildcardReplaceManager">
+        <property name="translator" ref="translator"/>
+    </bean>
+
+    <bean name="normalContentManager"
+          class="com.crscd.passengerservice.broadcast.content.business.NormalContentManager">
+        <property name="dao" ref="normalContentDAO"/>
+        <property name="manager" ref="normalWildcardReplaceManager"/>
+    </bean>
+
+    <bean name="broadcastRecordManager"
+          class="com.crscd.passengerservice.broadcast.record.business.BroadcastRecordManager">
+        <property name="recordDAO" ref="broadcastRecordDAO"/>
+    </bean>
+
+    <bean name="broadcastSchedulerManager"
+          class="com.crscd.passengerservice.broadcast.business.BroadcastSchedulerManager"/>
+
+    <bean name="broadcastPlanExecuteManager"
+          class="com.crscd.passengerservice.broadcast.business.BroadcastPlanExecuteManager">
+        <property name="planManager" ref="broadcastPlanManager"/>
+        <property name="configManager" ref="configManager"/>
+        <property name="contentReplaceInterface" ref="normalContentManager"/>
+        <!--<property name="driverInterface" ref=""/>-->
+        <property name="recordManager" ref="broadcastRecordManager"/>
+        <property name="stateInterface" ref="broadcastStateInterfaceImpl"/>
+        <property name="schedulerManager" ref="broadcastSchedulerManager"/>
+    </bean>
+
+    <bean name="trainManualBroadcastManager"
+          class="com.crscd.passengerservice.broadcast.business.TrainManualBroadcastManager">
+        <property name="executeManager" ref="broadcastPlanExecuteManager"/>
+        <property name="passengerPlanManager" ref="passengerPlanManager"/>
+    </bean>
+
+    <bean name="alterBroadcastPlanGenerator"
+          class="com.crscd.passengerservice.plan.business.AlterBroadcastPlanGenerator">
+        <property name="templateManager" ref="broadcastTemplateManager"/>
+    </bean>
+
+    <bean name="broadcastContentInterfaceImpl"
+          class="com.crscd.passengerservice.broadcast.content.serviceinterface.BroadcastContentInterfaceImpl">
+        <property name="normalDAO" ref="normalContentDAO"/>
+        <property name="specialDAO" ref="specialContentDAO"/>
+        <property name="wildcardInterface" ref="normalWildcardReplaceManager"/>
+        <property name="specialWildcardInterface" ref="specialWildcardReplaceManager"/>
+    </bean>
+
+    <bean name="brodcastGroupInterfaceImpl"
+          class="com.crscd.passengerservice.broadcast.template.serviceinterface.BroadcastTemplateGroupInterfaceImpl">
+        <property name="groupDAO" ref="broadcastTemplateGroupDAO"/>
+        <property name="manager" ref="broadcastTemplateManager"/>
+        <property name="templateDao" ref="broadcastTemplateDAO"/>
+    </bean>
+
+    <bean name="broadcastRecordServiceInterfaceImpl"
+          class="com.crscd.passengerservice.broadcast.record.serviceinterface.BroadcastRecordServiceInterfaceImpl">
+        <property name="manager" ref="broadcastRecordManager"/>
+    </bean>
+
+    <bean name="broadcastPlanExecuteInterfaceImpl"
+          class="com.crscd.passengerservice.broadcast.serviceinterface.BroadcastPlanExecuteInterfaceImpl">
+        <property name="broadcastManager" ref="trainManualBroadcastManager"/>
+        <property name="planExecuteManager" ref="broadcastPlanExecuteManager"/>
+        <property name="stationPlanManager" ref="passengerPlanManager"/>
+    </bean>
+
+    <bean name="broadcastService" class="com.crscd.passengerservice.soapinterface.implement.BroadcastServiceInterfaceImpl">
+        <property name="templateGroupInterface" ref="brodcastGroupInterfaceImpl"/>
+        <property name="contentInterface" ref="broadcastContentInterfaceImpl"/>
+        <property name="recordServiceInterface" ref="broadcastRecordServiceInterfaceImpl"/>
+        <property name="executeInterface" ref="broadcastPlanExecuteInterfaceImpl"/>
+    </bean>
+</beans>

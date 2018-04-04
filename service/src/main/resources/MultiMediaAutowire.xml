@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean name="materialManager" class="com.crscd.passengerservice.multimedia.business.MaterialManager">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="convert" ref="beanAndInfoConvert"/>
+        <property name="material" ref="Material"/>
+    </bean>
+
+    <bean name="materialManagerImplement"
+          class="com.crscd.passengerservice.multimedia.serviceinterface.implement.MaterialManagerImplement">
+        <property name="materialManager" ref="materialManager"/>
+    </bean>
+
+    <bean name="multimediaDAO" class="com.crscd.passengerservice.multimedia.dao.MultimediaDAO">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="playListManager" class="com.crscd.passengerservice.multimedia.business.PlayListManager">
+        <property name="multimediaDAO" ref="multimediaDAO"/>
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="beanAndInfoConvert" class="com.crscd.passengerservice.multimedia.util.BeanAndInfoConvert"/>
+
+    <bean name="playListManagerImplement"
+          class="com.crscd.passengerservice.multimedia.serviceinterface.implement.PlayListManagerImplement">
+        <property name="playListManager" ref="playListManager"/>
+        <property name="configManager" ref="configManager"/>
+        <property name="multimediaDAO" ref="multimediaDAO"/>
+        <property name="playList" ref="PlayList"/>
+    </bean>
+</beans>

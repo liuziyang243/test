@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+    <bean name="ticketMsgManageImplement"
+          class="com.crscd.passengerservice.ticket.serviceinterface.impl.TicketMsgManageImplement">
+        <property name="config" ref="configManager"/>
+        <property name="noticeInterface" ref="ticketNoticeImpl"/>
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="structTransformer" ref="structTransformer"/>
+        <property name="ticketDataForDisplayGeneration" ref="ticketDataForDisplayGeneration"/>
+    </bean>
+
+    <bean name="structTransformer" class="com.crscd.passengerservice.ticket.bussiness.StructTransformer">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="config" ref="configManager"/>
+        <property name="bpi" ref="basicPlanManager"/>
+    </bean>
+
+    <bean name="ticketDataForDisplayGeneration"
+          class="com.crscd.passengerservice.ticket.bussiness.TicketDataForDisplayGeneration">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="configManager" ref="configManager"/>
+        <property name="dataGetOrderByTime" ref="dataGetOrderByTime"/>
+    </bean>
+
+    <bean name="startInfoRefreshJobs" class="com.crscd.passengerservice.ticket.bussiness.TicketInfoRefreshManager"/>
+
+</beans>

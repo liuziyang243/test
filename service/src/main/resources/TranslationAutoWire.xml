@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean name="entryDAO" class="com.crscd.framework.translation.dao.EntryDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="lanDAO" class="com.crscd.framework.translation.dao.LanguageDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="translator" class="com.crscd.framework.translation.serviceinterface.impl.TranslatorInterfaceImpl">
+        <property name="entryDao" ref="entryDAO"/>
+    </bean>
+
+</beans>

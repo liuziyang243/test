@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:cache="http://www.springframework.org/schema/cache"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+
+    <!--通过aop增加了ehcache对config的缓存-->
+    <!--将缓存通知绑定到一个切点上-->
+    <aop:config>
+        <aop:advisor advice-ref="cacheAdvice"
+                     pointcut="execution(* com.crscd.passengerservice.config.serviceinterface.implement.SystemConfigInterfaceImpl.*(..))"/>
+    </aop:config>
+
+    <cache:advice id="cacheAdvice">
+        <!--指定是哪一个缓存-->
+        <cache:caching cache="configCache">
+            <!--定义一组特定的缓存规则-->
+            <!--配置为支持缓存-->
+            <cache:cacheable method="getSystemInfo"/>
+            <!--配置为支持缓存-->
+            <cache:cacheable method="getScreenConfigInfoByStationAndType"/>
+        </cache:caching>
+    </cache:advice>
+
+    <bean id="cacheManager" class="org.springframework.cache.ehcache.EhCacheCacheManager">
+        <property name="cacheManager" ref="ehcacheManagerFactory"/>
+    </bean>
+
+    <bean id="ehcacheManagerFactory" class="org.springframework.cache.ehcache.EhCacheManagerFactoryBean">
+        <property name="configLocation" value="ehcache.xml"/>
+    </bean>
+
+    <bean name="configDAO" class="com.crscd.passengerservice.config.dao.ConfigDAO">
+        <property name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <!--<bean name="cofigDAO_auth" class="com.crscd.passengerservice.config.dao.ConfigDAO">-->
+    <!--<property name="dataSet" ref="oracleDataSet"/>-->
+    <!--</bean>-->
+
+    <bean id="configManager" class="com.crscd.passengerservice.config.business.ConfigManager">
+        <property name="configDAO" ref="configDAO"/>
+    </bean>
+
+    <!--<bean id="configManager_auth" class="com.crscd.passengerservice.config.business.ConfigManager" init-method="init">-->
+    <!--<property name="configDAO" ref="cofigDAO_auth"/>-->
+    <!--</bean>-->
+
+    <bean name="configServiceImpl"
+          class="com.crscd.passengerservice.config.serviceinterface.implement.SystemConfigInterfaceImpl">
+        <property name="manager" ref="configManager"/>
+        <property name="translator" ref="translator"/>
+    </bean>
+
+    <bean name="systemInfoImpl"
+          class="com.crscd.passengerservice.config.serviceinterface.implement.SystemInfoInterfaceImpl">
+        <property name="configManager" ref="configManager"/>
+    </bean>
+
+</beans>

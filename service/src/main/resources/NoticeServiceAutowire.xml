@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean id="noticeDAO" class="com.crscd.passengerservice.notice.dao.NoticeDAO">
+        <constructor-arg name="dataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean id="noticeManager" class="com.crscd.passengerservice.notice.business.NoticeManager">
+        <constructor-arg name="dao" ref="noticeDAO"/>
+        <property name="broadcastStationPlanManager" ref="broadcastPlanManager"/>
+        <property name="dispatchStationPlanManager" ref="dispathPlanManager"/>
+        <property name="guideStationPlanManager" ref="guidePlanManager"/>
+        <property name="passengerStationPlanManager" ref="passengerPlanManager"/>
+    </bean>
+
+    <bean id="autoProcessManager" class="com.crscd.passengerservice.notice.business.AutoProcessManager">
+        <property name="manager" ref="noticeManager"/>
+    </bean>
+
+    <bean id="noticeGenOberver" class="com.crscd.passengerservice.notice.business.NoticeGenObserver">
+        <constructor-arg name="ctcNoticeInterface" ref="ctcNoticeImpl"/>
+        <constructor-arg name="ticketNoticeInterface" ref="ticketNoticeImpl"/>
+        <property name="autoProcessManager" ref="autoProcessManager"/>
+    </bean>
+
+    <bean id="noticeServiceImpl"
+          class="com.crscd.passengerservice.notice.serviceinterface.implement.NoticeServiceInterfaceImpl">
+        <property name="manager" ref="noticeManager"/>
+    </bean>
+
+    <bean id="ticketNoticeImpl"
+          class="com.crscd.passengerservice.notice.serviceinterface.implement.TicketNoticeInterfaceImpl">
+        <property name="manager" ref="noticeManager"/>
+    </bean>
+
+    <bean id="ctcNoticeImpl"
+          class="com.crscd.passengerservice.notice.serviceinterface.implement.CTCNoticeInterfaceImpl">
+        <property name="manager" ref="noticeManager"/>
+    </bean>
+
+    <bean name="planGenNoticeInterface"
+          class="com.crscd.passengerservice.notice.serviceinterface.implement.PlanGenNoticeInterfaceImpl">
+        <property name="manager" ref="noticeManager"/>
+    </bean>
+
+</beans>

@@ -1,0 +1,37 @@
+template: Version of this software is %s.
+defaultVersion: v0.0.0
+
+server:
+  applicationConnectors:
+  - type: http
+    port: 5004
+  adminConnectors:
+  - type: http
+    port: 5005
+  requestLog:
+    type: external
+
+logging:
+  type: external
+
+#logging:
+#  appenders:
+#    - type: console
+#      threshold: INFO
+#
+#    - type: file
+#      # threshold for file log is warn
+#      threshold: WARN
+#      # The file to which current statements will be logged.
+#      currentLogFilename: ./logs/IMPlog.log
+#
+#      # When the log file rotates, the archived log will be renamed to this and gzipped. The
+#      # %d is replaced with the previous day (yyyy-MM-dd). Custom rolling windows can be created
+#      # by passing a SimpleDateFormat-compatible format as an argument: "%d{yyyy-MM-dd-hh}".
+#      archivedLogFilenamePattern: ./logs/IMPlog-%d.log.gz
+#
+#      # The number of archived files to keep.
+#      archivedFileCount: 10
+#
+#      # The timezone used to format dates. HINT: USE THE DEFAULT, UTC.
+#      timeZone: UTC

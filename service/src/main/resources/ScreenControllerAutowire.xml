@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <bean name="authentication" class="com.crscd.passengerservice.display.screencontrolserver.business.Authentication">
+        <property name="urlUtil" ref="UrlUtil"/>
+    </bean>
+
+    <bean name="heartbeat" class="com.crscd.passengerservice.display.screencontrolserver.business.Heartbeat">
+        <property name="authentication" ref="authentication"/>
+        <property name="urlUtil" ref="UrlUtil"/>
+    </bean>
+
+    <bean name="screenCtrlServerHeartbeatManager"
+          class="com.crscd.passengerservice.display.screencontrolserver.business.ScreenCtrlServerHeartbeatManager">
+
+    </bean>
+
+    <bean name="Material" class="com.crscd.passengerservice.display.screencontrolserver.business.Material">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="authentication" ref="authentication"/>
+        <property name="urlUtil" ref="UrlUtil"/>
+    </bean>
+
+    <bean name="DeviceManage" class="com.crscd.passengerservice.display.screencontrolserver.business.DeviceManage">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="authentication" ref="authentication"/>
+        <property name="urlUtil" ref="UrlUtil"/>
+    </bean>
+
+    <bean name="UrlUtil" class="com.crscd.passengerservice.display.screencontrolserver.util.UrlUtil">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+
+    <bean name="PlayList" class="com.crscd.passengerservice.display.screencontrolserver.business.PlayList">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="authentication" ref="authentication"/>
+        <property name="urlUtil" ref="UrlUtil"/>
+    </bean>
+
+    <bean name="FormatSend" class="com.crscd.passengerservice.display.screencontrolserver.business.FormatSend">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+        <property name="authentication" ref="authentication"/>
+        <property name="urlUtil" ref="UrlUtil"/>
+        <property name="formatSendReturnManage" ref="FormatSendReturnManage"/>
+        <property name="configDAO" ref="configDAO"/>
+        <property name="formatFileManager" ref="formatFileManager"/>
+    </bean>
+
+    <bean name="ScreenInfoUtil" class="com.crscd.passengerservice.display.util.ScreenInfoUtil">
+        <property name="oracleDataSet" ref="${travelService.dataBaseInUse}"/>
+    </bean>
+</beans>
