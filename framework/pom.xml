@@ -23,5 +23,36 @@
             </resource>
         </resources>
 
+        <plugins>
+            <!-- skip tests during packaging -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.19.1</version>
+                <configuration>
+                    <skipTests>true</skipTests>
+                </configuration>
+            </plugin>
+
+            <!-- maven compiler -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <compilerArguments>
+                        <!--linux用：分隔-->
+                        <bootclasspath>${java.home}/lib/rt.jar:${java.home}/lib/jce.jar</bootclasspath>
+                        <!--windows用,分隔-->
+                        <!--<bootclasspath>${env.JAVA_HOME}/jre/lib/rt.jar</bootclasspath>-->
+                        <!--<bootclasspath>${java.home}/lib/rt.jar,${java.home}/lib/jce.jar</bootclasspath>-->
+                    </compilerArguments>
+                    <encoding>UTF-8</encoding>
+                </configuration>
+            </plugin>
+        </plugins>
+
     </build>
 </project>
